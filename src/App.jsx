@@ -2,9 +2,9 @@ import './App.css'
 // ho svuotato i file App.css e index.css, ora inserisco l'import per bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css'
 // questa riga ha importato il foglio css di bootstrap IN TUTTO IL PROGETTO!
-import { Container, Row, Col } from 'react-bootstrap'
 import RestaurantNavbar from './components/RestaurantNavbar'
 import RestaurantFooter from './components/RestaurantFooter'
+import Home from './components/Home'
 // le graffe nell'import qui sono fondamentali perchè nessuno dei componenti react-bootstrap
 // che stiamo andando ad importare sono esportati come DEFAULT dalla libreria!
 // Solitamente invece, i componenti che creerete voi, saranno 1 per file! questo facilita le cose
@@ -12,23 +12,17 @@ import RestaurantFooter from './components/RestaurantFooter'
 
 function App() {
   return (
-    <>
+    <div className="d-flex flex-column min-vh-100">
       <header>
         <RestaurantNavbar />
       </header>
-      <main>
-        <Container>
-          <Row>
-            <Col xs={12} md={6}>
-              {/* sarebbe come dire <div className="col-12 col-md-6"></div> */}
-            </Col>
-          </Row>
-        </Container>
+      <main className="flex-grow-1">
+        <Home />
       </main>
       <footer>
         <RestaurantFooter />
       </footer>
-    </>
+    </div>
   )
 }
 
