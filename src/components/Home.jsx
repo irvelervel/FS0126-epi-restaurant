@@ -24,7 +24,6 @@ class Home extends Component {
       <Container>
         <Row className="my-3">
           <Col className="text-center">
-            <h1>Epi-Restaurant</h1>
             <h3>Le migliori pastasciutte del web!</h3>
           </Col>
         </Row>
