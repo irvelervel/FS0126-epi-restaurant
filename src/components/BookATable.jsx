@@ -3,7 +3,7 @@
 // il metodo HTTP utilizzato per salvare una nuova prenotazione sarà POST
 
 import { Component } from 'react'
-import { Container, Row, Col, Form, Button } from 'react-bootstrap'
+import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap'
 
 // - OGNI VOLTA CHE UN COMPONENTE POSSIEDE UN CAMPO INPUT C'È BISOGNO DI UNO STATE -
 // -> dev'essere un COMPONENTE A CLASSE
@@ -44,12 +44,84 @@ class BookATable extends Component {
       <Container>
         <Row className="justify-content-center">
           <Col xs={12} lg={6} className="text-center">
-            <h3>Prenota un tavolo!</h3>
+            <h3
+              style={{
+                color:
+                  this.state.reservation.name === 'Mario' ? 'red' : 'black',
+              }}
+              className={
+                this.state.reservation.name === 'Mario' ? 'fw-bold' : ''
+              }
+            >
+              Prenota un tavolo!
+            </h3>
           </Col>
         </Row>
         <Row className="justify-content-center mt-3 mb-5">
           <Col xs={12} lg={6}>
-            <Form>
+            <Form
+              onSubmit={async (e) => {
+                e.preventDefault()
+                // ora dobbiamo raccogliere i dati... anzi no! ce li abbiamo già tutti nello state :)
+                fetch(
+                  'https://striveschool-api.herokuapp.com/api/reservation',
+                  {
+                    method: 'POST',
+                    body: JSON.stringify(this.state.reservation), // :)
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  },
+                )
+                  .then((response) => {
+                    if (response.ok) {
+                      alert('PRENOTAZIONE SALVATA!')
+                      // cosa manca? manca svuotare il form!
+                      //   per svuotare il form, resetto lo stato ai valori iniziali!
+                      this.setState({
+                        reservation: {
+                          name: '',
+                          phone: '',
+                          numberOfPeople: '',
+                          smoking: false,
+                          dateTime: '',
+                          specialRequests: '',
+                        },
+                      })
+                    } else {
+                      throw new Error(
+                        'Errore nella prenotazione',
+                        response.status,
+                      )
+                    }
+                  })
+                  .catch((err) => {
+                    console.log('prenotazione non salvata', err)
+                  })
+
+                // VARIANTE CON ASYNC/AWAIT
+                // il blocco della gestione errore va fatto a manina
+                // try {
+                //   const response = await fetch(
+                //     'https://striveschool-api.herokuapp.com/api/reservation',
+                //     {
+                //       method: 'POST',
+                //       body: JSON.stringify(this.state.reservation), // :)
+                //       headers: {
+                //         'Content-Type': 'application/json',
+                //       },
+                //     },
+                //   )
+
+                //   if (response.ok) {
+                //     // ...
+                //     const data = await response.json()
+                //   }
+                // } catch (err) {
+                //   console.log(err)
+                // }
+              }}
+            >
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="name">Nome</Form.Label>
                 <Form.Control
@@ -76,6 +148,18 @@ class BookATable extends Component {
                   }}
                 />
               </Form.Group>
+
+              {/* SHORT CIRCUIT OPERATOR */}
+              {/* l'operatore short circuit applicherà al nostro componente delle regole di 
+              "rendering condizionale" */}
+              {this.state.reservation.name === 'Mario' && (
+                <Alert variant="success">Che bel nome!</Alert>
+              )}
+
+              {this.state.reservation.name.length < 4 &&
+                this.state.reservation.name.length > 0 && (
+                  <Alert variant="danger">Nome non valido!</Alert>
+                )}
 
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="phone">Telefono</Form.Label>
