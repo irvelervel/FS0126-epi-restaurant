@@ -29,7 +29,7 @@ class Home extends Component {
           </Col>
         </Row>
         <Row className="justify-content-center">
-          <Col xs={12} lg={6}>
+          <Col xs={12} lg={6} className="text-center">
             {/* sarebbe come dire <div className="col-12 col-md-6"></div> */}
             <Carousel
               onSlide={(i) => {
@@ -37,7 +37,7 @@ class Home extends Component {
                 console.log(pastasciutte[i])
                 console.log(this.state)
                 // PLOT TWIST! l'oggetto STATE è READ-ONLY!!!
-                // this.state.activePasta = pastasciutte[i]
+                // this.state.activePasta = pastasciutte[i] // <-- NON SI PUÒ FARE
                 // l'unico modo per aggiornare lo stato di un componente è utilizzare un METODO
                 // this.setState() prende un NUOVO oggetto e lo FONDE su this.state esistente
                 this.setState({
