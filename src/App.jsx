@@ -6,6 +6,7 @@ import RestaurantNavbar from './components/RestaurantNavbar'
 import RestaurantFooter from './components/RestaurantFooter'
 import Home from './components/Home'
 import BookATable from './components/BookATable'
+import Backoffice from './components/Backoffice'
 // le graffe nell'import qui sono fondamentali perchè nessuno dei componenti react-bootstrap
 // che stiamo andando ad importare sono esportati come DEFAULT dalla libreria!
 // Solitamente invece, i componenti che creerete voi, saranno 1 per file! questo facilita le cose
@@ -19,6 +20,10 @@ function App() {
       </header>
       <main className="flex-grow-1">
         <h1 className="text-center my-3">Epi-Restaurant</h1>
+
+        {/* componente backoffice */}
+        <Backoffice />
+
         {/* componente prenotazioni */}
         <BookATable />
         {/* componente homepage */}

@@ -32,9 +32,9 @@ class Home extends Component {
             {/* sarebbe come dire <div className="col-12 col-md-6"></div> */}
             <Carousel
               onSlide={(i) => {
-                console.log('SLIDE CAMBIATA!', i)
-                console.log(pastasciutte[i])
-                console.log(this.state)
+                // console.log('SLIDE CAMBIATA!', i)
+                // console.log(pastasciutte[i])
+                // console.log(this.state)
                 // PLOT TWIST! l'oggetto STATE è READ-ONLY!!!
                 // this.state.activePasta = pastasciutte[i] // <-- NON SI PUÒ FARE
                 // l'unico modo per aggiornare lo stato di un componente è utilizzare un METODO
