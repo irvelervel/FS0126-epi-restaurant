@@ -2,7 +2,15 @@
 // e di mostrarle in una lista dedicata all'amministrazione
 
 import { Component } from 'react'
-import { Container, Row, Col, ListGroup, Spinner } from 'react-bootstrap'
+import {
+  Container,
+  Row,
+  Col,
+  ListGroup,
+  Spinner,
+  Alert,
+  Button,
+} from 'react-bootstrap'
 
 // Se un componente intende recuperare informazioni da un'API, questo componente avrà bisogno di uno STATO
 // -> dobbiamo creare questo componente come CLASSE
@@ -13,6 +21,7 @@ class Backoffice extends Component {
     prenotazioni: [], // lo inizializzo come ARRAY VUOTO
     // ora mi salvo anche una proprietà per mostrare/nascondere l'indicatore di caricamento
     isLoading: true,
+    isError: false,
   }
 
   getPrenotazioni = () => {
@@ -43,7 +52,27 @@ class Backoffice extends Component {
         // spengo lo spinner, settando isLoading nello state a false
         this.setState({
           isLoading: false,
+          isError: true,
         })
+      })
+  }
+
+  deletePrenotazione = (id) => {
+    fetch('https://striveschool-api.herokuapp.com/api/reservation/' + id, {
+      method: 'DELETE',
+    })
+      .then((response) => {
+        if (response.ok) {
+          alert('ELIMINATA!')
+          // occupiamoci di recuperare nuovamente le prenotazioni rimanenti con una nuova
+          // invocazione di getPrenotazioni()
+          this.getPrenotazioni() // <-- "refresh della lista"
+        } else {
+          throw new Error('Response non ok', response.status)
+        }
+      })
+      .catch((err) => {
+        console.log('ERRORE ELIMINAZIONE PRENOTAZIONE', err)
       })
   }
 
@@ -85,6 +114,14 @@ class Backoffice extends Component {
         </Row>
         <Row className="justify-content-center mt-3 mb-5">
           <Col xs={12} lg={6}>
+            {this.state.isLoading ? (
+              <Alert variant="info">Caricamento in corso...</Alert>
+            ) : (
+              <Alert variant="success">Caricamento completato</Alert>
+            )}
+            {this.state.isError && (
+              <Alert variant="danger">Errore nel recupero prenotazioni</Alert>
+            )}
             {
               // SHORT CIRCUIT
               // utile per il "conditional rendering"
@@ -99,9 +136,24 @@ class Backoffice extends Component {
 
               {this.state.prenotazioni.map((reservation) => {
                 return (
-                  <ListGroup.Item key={reservation._id}>
-                    {reservation.name} per {reservation.numberOfPeople} alle{' '}
-                    {reservation.dateTime}
+                  <ListGroup.Item
+                    key={reservation._id}
+                    className="d-flex justify-content-between"
+                  >
+                    <span>
+                      {reservation.name} per {reservation.numberOfPeople} alle{' '}
+                      {new Date(reservation.dateTime)
+                        .toLocaleString('it-IT')
+                        .slice(0, -3)}
+                    </span>
+                    <Button
+                      variant="danger"
+                      onClick={() => {
+                        this.deletePrenotazione(reservation._id) // sempre con il this!
+                      }}
+                    >
+                      🗑️
+                    </Button>
                   </ListGroup.Item>
                 )
               })}
